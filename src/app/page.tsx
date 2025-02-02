@@ -21,7 +21,7 @@ const UploadPhotos = () => {
         <Container maxWidth="lg" sx={{ margin: "0 auto", padding: "0 10px",mt:2 }}>
             <Grid container spacing={4} sx={{ mb: 2 }}>
                 {/* First Block */}
-                <Grid item xs={7.5} md={6}>
+                <Grid item xs={12} md={6}>
                     <Typography variant="h3" gutterBottom>
                         Upload your best photos
                     </Typography>
@@ -35,7 +35,7 @@ const UploadPhotos = () => {
                 </Grid>
 
                 {/* Second Block */}
-                <Grid item xs={4.5} md={6}>
+                <Grid item xs={12} md={6}>
                     <Typography variant="h4" gutterBottom>
                         Photo requirements
                     </Typography>
