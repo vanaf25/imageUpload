@@ -3,7 +3,8 @@ import { createClient } from "@/utils/supabase/server";
 
 export async function DELETE(req: Request, { params }: { params: any }) {
     try {
-        const { id: imageId } = params;
+        const { id: imageId  } = params;
+        console.log(imageId);
         const supabase = await createClient();
 
         // Authenticate the user
