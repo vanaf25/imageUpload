@@ -3,7 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 
 export async function DELETE(req: Request, { params }: { params: any }) {
     try {
-        const { id: imageId  } = params;
+        const { id: imageId  } = await  params;
         console.log(imageId);
         const supabase = await createClient();
 
@@ -29,10 +29,12 @@ export async function DELETE(req: Request, { params }: { params: any }) {
         if (fetchError || !image) {
             return NextResponse.json({ error: "Image not found or unauthorized" }, { status: 404 });
         }
-        const { error: storageError } = await supabase.storage
+        console.log('data:',image);
+        const {data, error: storageError } = await supabase.storage
             .from("photopod1")
             .remove([image.url]);
-
+        console.log('removeBucket:',data);
+        console.log('storageError:',storageError);
         if (storageError) {
             return NextResponse.json({ error: "Failed to delete image from storage" }, { status: 500 });
         }

@@ -13,12 +13,15 @@ export async function GET(req:NextRequest) {
 
     const { data, error } = await supabase
         .from('images')
-        .select('*')
+        .select('id, url')
         .eq('userId', session.user.id)
         .order('created_at', { ascending: false });
 
     if (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    return NextResponse.json({ images: data }, { status: 200 });
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const prePath= `${supabaseUrl}/storage/v1/object/public/photopod1/`;
+    return NextResponse.json({ images:
+            data?.map(el=>({...el,url:`${prePath}${el.url}`})) }, { status: 200 });
 }

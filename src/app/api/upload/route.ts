@@ -29,12 +29,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
                 .from("photopod1")
                 .upload(filePath, file, { cacheControl: "3600", upsert: false });
             if (error) throw error;
-            const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-            const url = `${supabaseUrl}/storage/v1/object/public/photopod1/${data.path}`;
+
+            const url = `${data.path}`;
             uploadedImages.push(url);
         }
        const {data:images}= await supabase.from("images").insert(uploadedImages.map(url=>({url,userId:user.id}))).select()
-        return NextResponse.json({ message: "Upload successful", images }, { status: 200 });
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const prePath= `${supabaseUrl}/storage/v1/object/public/photopod1/`;
+        return NextResponse.json({ message: "Upload successful", images:
+                images?.map(img=>({...img,url:`${prePath}${img.url}`})) }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ error: (error as Error).message }, { status: 500 });
     }
