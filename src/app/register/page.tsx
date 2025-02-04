@@ -1,7 +1,9 @@
 "use client";
 import React, { useState, FormEvent } from 'react';
-import { TextField, Button, Container, Typography, Box } from '@mui/material';
+import { TextField, Button, Container, Typography, Box, Link } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import {createClient} from "@/utils/supabase/client";
+import NextLink from "next/link";
 
 const Page: React.FC = () => {
     const [formState, setFormState] = useState({
@@ -12,6 +14,7 @@ const Page: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<boolean>(false);
+    const router = useRouter();
     const supabase=createClient()
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -36,6 +39,7 @@ const Page: React.FC = () => {
 
             console.log("User registered:", data.user);
             setSuccess(true);
+            router.push("/login")
         } catch (err: any) {
             setError(err.message || 'An error occurred during registration.');
         } finally {
@@ -113,6 +117,13 @@ const Page: React.FC = () => {
                     {error && <Typography color="error" mt={2}>{error}</Typography>}
                     {success && <Typography color="success" mt={2}>Registration successful!</Typography>}
                 </form>
+                <Typography mt={2}>
+                    Already have an account?{" "}
+                    <Link component={NextLink} href="/login"
+                          color="primary" underline="hover">
+                    Login
+                </Link>
+                </Typography>
             </Box>
         </Container>
     );
