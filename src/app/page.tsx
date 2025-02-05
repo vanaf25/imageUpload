@@ -9,6 +9,13 @@ import photoRequirement from '@/images/photoRequirement.jpg';
 import axios from 'axios';
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
+import firstImage from "@/images/firstRequirement.webp"
+import secondImage from "@/images/secondRequierment.webp"
+import thirdImage from "@/images/thirdRequierement.webp"
+import fifthImage from "@/images/fifthRequirement.webp"
+import sixthImage from "@/images/sixthRequierement.webp"
+import seventhImage from "@/images/seventhRequierement.webp"
+import eighthImage from "@/images/eighthRequierement.webp"
 
 type ImageData = {
     id: string | number;
@@ -28,7 +35,7 @@ const UploadPhotos = () => {
                 setLoading(true);
                 const response = await axios.get<any>('/api/getImages');
                 console.log("Received images: ", response.data);
-                setImages(prevState => [...prevState, ...response.data?.images?.map((el: any) => ({ id: el.id, url: el.url }))]);
+                setImages(response.data?.images?.map((el: any) => ({ id: el.id, url: el.url })));
             } catch (error) {
                 console.error("Error fetching images:", error);
             } finally {
@@ -43,12 +50,19 @@ const UploadPhotos = () => {
             setIsLogOut(true);
             await supabase.auth.signOut();
             router.push("/login");
+            setImages([]);
         } catch (error: any) {
             console.error('Logout error:', error);
         } finally {
             setIsLogOut(false);
         }
     };
+    const requirements=[
+        {title:"Headshots of you looking straight into the camera",
+            elems:[firstImage,secondImage,thirdImage,eighthImage]},
+        {title:"Neutral expressions or nice smiles, no silly faces",
+            elems:[fifthImage,sixthImage,seventhImage,eighthImage],}
+    ]
     return (
         <Container maxWidth="lg" sx={{ margin: "0 auto", padding: "0 10px", mt: 2 }}>
             <Button
@@ -90,23 +104,20 @@ const UploadPhotos = () => {
                         Photo requirements
                     </Typography>
 
-                    {["Proper Lighting", "Clear Background", "High Resolution"].map((title, index) => (
+                    {requirements.map((el, index) => (
                         <Box key={index} sx={{ mb: 2 }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                                 <CheckCircleIcon color="primary" />
-                                <Typography variant="h6">{title}</Typography>
+                                <Typography variant="h6">{el.title}</Typography>
                             </Box>
                             <Box sx={{ display: 'flex', gap: 1 }}>
-                                {[...Array(3)].map((_, i) => (
-                                    <Box key={i} sx={{ position: 'relative', width: 100, height: 100 }}>
-                                        <Image src={photoRequirement} alt="Photo requirement" width={100} height={100} style={{ borderRadius: 8 }} />
-                                        <CheckCircleIcon sx={{ position: 'absolute', top: 4, right: 4, color: 'green' }} />
-                                    </Box>
-                                ))}
-                                <Box sx={{ position: 'relative', width: 100, height: 100 }}>
-                                    <Image src={photoRequirement} alt="Photo requirement" width={100} height={100} style={{ borderRadius: 8 }} />
-                                    <CancelIcon sx={{ position: 'absolute', top: 4, right: 4, color: 'red' }} />
-                                </Box>
+                                {el.elems.map((el,index,array)=> <Box key={index}
+                                                                      sx={{ position: 'relative', width: 100, height: 100 }}>
+                                    <Image src={el} alt="Photo requirement" width={100} height={100} style={{ borderRadius: 8 }} />
+                                    {array.length-1===index ?
+                                        <CancelIcon sx={{ position: 'absolute', top: 0, right: 0, color: 'red' }} />:
+                                        <CheckCircleIcon sx={{ position: 'absolute', top: 0, right: 0, color: 'green' }} />}
+                                </Box>)}
                             </Box>
                         </Box>
                     ))}

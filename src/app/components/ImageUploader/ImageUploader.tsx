@@ -101,7 +101,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ images, setImages }) => {
             setUploading(false);
         }
     };
-
+    console.log('img:',images);
     return (
         <Box>
             <Box
