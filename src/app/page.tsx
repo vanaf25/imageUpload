@@ -35,7 +35,10 @@ const UploadPhotos = () => {
                 setLoading(true);
                 const response = await axios.get<any>('/api/getImages');
                 console.log("Received images: ", response.data);
-                setImages(response.data?.images?.map((el: any) => ({ id: el.id, url: el.url })));
+                const imgs=response.data?.images?.map((el: any) => ({ id: el.id, url: el.url }))
+                if(imgs?.length){
+                    setImages(imgs);
+                }
             } catch (error) {
                 console.error("Error fetching images:", error);
             } finally {
