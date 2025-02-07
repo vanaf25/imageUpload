@@ -5,18 +5,17 @@ import ImageUploader from '@/app/components/ImageUploader/ImageUploader';
 import Image from 'next/image';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
-import photoRequirement from '@/images/photoRequirement.jpg';
 import axios from 'axios';
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import firstImage from "@/images/firstRequirement.webp"
 import secondImage from "@/images/secondRequierment.webp"
 import thirdImage from "@/images/thirdRequierement.webp"
+import fourthImage from "@/images/fourthRequirement.webp"
 import fifthImage from "@/images/fifthRequirement.webp"
 import sixthImage from "@/images/sixthRequierement.webp"
 import seventhImage from "@/images/seventhRequierement.webp"
 import eighthImage from "@/images/eighthRequierement.webp"
-
 type ImageData = {
     id: string | number;
     file?: File;
@@ -62,7 +61,7 @@ const UploadPhotos = () => {
     };
     const requirements=[
         {title:"Headshots of you looking straight into the camera",
-            elems:[firstImage,secondImage,thirdImage,eighthImage]},
+            elems:[firstImage,secondImage,thirdImage,fourthImage]},
         {title:"Neutral expressions or nice smiles, no silly faces",
             elems:[fifthImage,sixthImage,seventhImage,eighthImage],}
     ]
