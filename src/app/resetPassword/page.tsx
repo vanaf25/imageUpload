@@ -1,16 +1,18 @@
 "use client";
-import {useState, useEffect, Suspense} from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Container, TextField, Button, Typography, Alert, AlertColor } from "@mui/material";
 import { createClient } from "@/utils/supabase/client";
 
 export default function ResetPassword() {
-   return <Suspense>
-       <Form/>
-   </Suspense>
+    return <Suspense>
+        <Form/>
+    </Suspense>
 }
-function Form(){
+
+function Form() {
     const searchParams = useSearchParams();
+    const router = useRouter(); // Add router for redirection
     const [token, setToken] = useState<string | null>(null);
     const supabase = createClient();
     const [password, setPassword] = useState("");
@@ -20,12 +22,14 @@ function Form(){
 
     useEffect(() => {
         // Delay accessing searchParams to avoid Next.js Suspense error
-        setToken(searchParams.get("token"));
+        setToken(searchParams.get("code"));
     }, [searchParams]);
 
     useEffect(() => {
         if (token === null) {
             setMessage({ type: "error", text: "Invalid or missing token" });
+        } else {
+            setMessage({ type: "", text: "" });
         }
     }, [token]);
 
@@ -46,6 +50,9 @@ function Form(){
             if (error) throw error;
 
             setMessage({ type: "success", text: "Password successfully updated!" });
+
+                router.push('/');
+
         } catch (err: any) {
             setMessage({ type: "error", text: err.message || "Error updating password" });
         }
@@ -93,5 +100,6 @@ function Form(){
             >
                 {loading ? "Updating..." : "Save New Password"}
             </Button>
-        </Container>)
+        </Container>
+    );
 }

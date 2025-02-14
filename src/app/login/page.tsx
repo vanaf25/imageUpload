@@ -75,6 +75,31 @@ const Page: React.FC = () => {
         }
     };
 
+    // Handle Facebook Sign-In
+    const handleFacebookSignIn = async () => {
+        setLoading(true);
+        setError(null);
+        setSuccess(false);
+
+        try {
+            const { data, error } = await supabase.auth.signInWithOAuth({
+                provider: 'facebook',
+            });
+
+            if (error) {
+                throw error;
+            }
+
+            console.log("User logged in with Facebook:", data);
+            setSuccess(true);
+            router.push('/');
+        } catch (err: any) {
+            setError(err.message || 'An error occurred during Facebook login.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <Container maxWidth="xs" sx={{ mt: 4 }}>
             <Box
@@ -101,6 +126,18 @@ const Page: React.FC = () => {
                     disabled={loading}
                 >
                     {loading ? 'Signing in with Google...' : 'Sign in with Google'}
+                </Button>
+
+                {/* Facebook Sign-In Button */}
+                <Button
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    sx={{ marginTop: 2, backgroundColor: "#1877F2" }}
+                    onClick={handleFacebookSignIn}
+                    disabled={loading}
+                >
+                    {loading ? 'Signing in with Facebook...' : 'Sign in with Facebook'}
                 </Button>
 
                 {/* Or use email/password login */}
@@ -141,12 +178,19 @@ const Page: React.FC = () => {
                     {error && <Typography color="error" mt={2}>{error}</Typography>}
                     {success && <Typography color="success" mt={2}>Login successful!</Typography>}
                 </form>
+
                 <Typography mt={2}>
                     Don't have an account?{' '}
                     <Link component={NextLink} href="/register" color="primary" underline="hover">
                         Register here
                     </Link>
                 </Typography>
+                <Typography mt={2}>
+                    <Link component={NextLink} href="/forgotPassword" color="primary" underline="hover">
+                        Forgot your password?
+                    </Link>
+                </Typography>
+
             </Box>
         </Container>
     );
