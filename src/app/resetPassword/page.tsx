@@ -1,11 +1,15 @@
 "use client";
-
-import { useState, useEffect } from "react";
+import {useState, useEffect, Suspense} from "react";
 import { useSearchParams } from "next/navigation";
 import { Container, TextField, Button, Typography, Alert, AlertColor } from "@mui/material";
 import { createClient } from "@/utils/supabase/client";
 
 export default function ResetPassword() {
+   return <Suspense>
+       <Form/>
+   </Suspense>
+}
+function Form(){
     const searchParams = useSearchParams();
     const [token, setToken] = useState<string | null>(null);
     const supabase = createClient();
@@ -89,6 +93,5 @@ export default function ResetPassword() {
             >
                 {loading ? "Updating..." : "Save New Password"}
             </Button>
-        </Container>
-    );
+        </Container>)
 }
