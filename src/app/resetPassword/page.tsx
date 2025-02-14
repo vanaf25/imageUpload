@@ -2,20 +2,25 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import {Container, TextField, Button, Typography, Alert, AlertColor} from "@mui/material";
-import {createClient} from "@/utils/supabase/client";
+import { Container, TextField, Button, Typography, Alert, AlertColor } from "@mui/material";
+import { createClient } from "@/utils/supabase/client";
 
 export default function ResetPassword() {
     const searchParams = useSearchParams();
-    const token = searchParams.get("token");
-    const supabase=createClient();
+    const [token, setToken] = useState<string | null>(null);
+    const supabase = createClient();
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [message, setMessage] = useState({ type: "", text: "" });
+    const [message, setMessage] = useState<{ type: string; text: string }>({ type: "", text: "" });
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (!token) {
+        // Delay accessing searchParams to avoid Next.js Suspense error
+        setToken(searchParams.get("token"));
+    }, [searchParams]);
+
+    useEffect(() => {
+        if (token === null) {
             setMessage({ type: "error", text: "Invalid or missing token" });
         }
     }, [token]);
@@ -30,14 +35,14 @@ export default function ResetPassword() {
         setMessage({ type: "", text: "" });
 
         try {
-            const { data, error } = await supabase.auth.updateUser({
+            const { error } = await supabase.auth.updateUser({
                 password,
             });
 
             if (error) throw error;
 
             setMessage({ type: "success", text: "Password successfully updated!" });
-        } catch (err:any) {
+        } catch (err: any) {
             setMessage({ type: "error", text: err.message || "Error updating password" });
         }
 
@@ -79,7 +84,7 @@ export default function ResetPassword() {
                 variant="contained"
                 color="primary"
                 onClick={handleResetPassword}
-                disabled={loading || !token}
+                disabled={loading || token === null}
                 sx={{ mt: 2 }}
             >
                 {loading ? "Updating..." : "Save New Password"}
