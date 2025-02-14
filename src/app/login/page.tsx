@@ -14,6 +14,7 @@ const Page: React.FC = () => {
     const router = useRouter();
     const supabase = createClient();
 
+    // Handle email & password login
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -40,12 +41,38 @@ const Page: React.FC = () => {
         }
     };
 
+    // Handle form input change
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormState((prevState) => ({
             ...prevState,
             [name]: value,
         }));
+    };
+
+    // Handle Google Sign-In
+    const handleGoogleSignIn = async () => {
+        setLoading(true);
+        setError(null);
+        setSuccess(false);
+
+        try {
+            const { data, error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+            });
+
+            if (error) {
+                throw error;
+            }
+
+            console.log("User logged in with Google:", data);
+            setSuccess(true);
+            router.push('/');
+        } catch (err: any) {
+            setError(err.message || 'An error occurred during Google login.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -63,6 +90,20 @@ const Page: React.FC = () => {
                 <Typography variant="h5" gutterBottom>
                     Login
                 </Typography>
+
+                {/* Google Sign-In Button */}
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    fullWidth
+                    sx={{ marginTop: 2 }}
+                    onClick={handleGoogleSignIn}
+                    disabled={loading}
+                >
+                    {loading ? 'Signing in with Google...' : 'Sign in with Google'}
+                </Button>
+
+                {/* Or use email/password login */}
                 <form onSubmit={handleSubmit} style={{ width: '100%' }}>
                     <TextField
                         label="Email"
