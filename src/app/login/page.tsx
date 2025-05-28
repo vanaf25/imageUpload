@@ -52,6 +52,7 @@ const Page: React.FC = () => {
 
     // Handle Google Sign-In
     const handleGoogleSignIn = async () => {
+        console.log('started!!');
         setLoading(true);
         setError(null);
         setSuccess(false);
@@ -69,6 +70,7 @@ const Page: React.FC = () => {
             setSuccess(true);
             router.push('/');
         } catch (err: any) {
+            console.log('err:',err);
             setError(err.message || 'An error occurred during Google login.');
         } finally {
             setLoading(false);
