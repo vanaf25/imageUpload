@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, FormEvent } from 'react';
 import { TextField, Button, Container, Typography, Box, Link } from '@mui/material';
 import { useRouter } from 'next/navigation';
@@ -13,7 +12,6 @@ const Page: React.FC = () => {
     const [success, setSuccess] = useState<boolean>(false);
     const router = useRouter();
     const supabase = createClient();
-
     // Handle email & password login
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -40,7 +38,6 @@ const Page: React.FC = () => {
             setLoading(false);
         }
     };
-
     // Handle form input change
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -49,7 +46,6 @@ const Page: React.FC = () => {
             [name]: value,
         }));
     };
-
     // Handle Google Sign-In
     const handleGoogleSignIn = async () => {
         console.log('started!!');
@@ -58,8 +54,12 @@ const Page: React.FC = () => {
         setSuccess(false);
 
         try {
+            console.log(`${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`);
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
+                options:{
+                    redirectTo:`${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`
+                }
             });
 
             if (error) {
@@ -68,7 +68,6 @@ const Page: React.FC = () => {
 
             console.log("User logged in with Google:", data);
             setSuccess(true);
-            router.push('/');
         } catch (err: any) {
             console.log('err:',err);
             setError(err.message || 'An error occurred during Google login.');
@@ -76,7 +75,6 @@ const Page: React.FC = () => {
             setLoading(false);
         }
     };
-
     // Handle Facebook Sign-In
     const handleFacebookSignIn = async () => {
         setLoading(true);
@@ -101,7 +99,6 @@ const Page: React.FC = () => {
             setLoading(false);
         }
     };
-
     return (
         <Container maxWidth="xs" sx={{ mt: 4 }}>
             <Box
@@ -121,6 +118,7 @@ const Page: React.FC = () => {
                 {/* Google Sign-In Button */}
                 <Button
                     variant="contained"
+                    type="button"
                     color="secondary"
                     fullWidth
                     sx={{ marginTop: 2 }}

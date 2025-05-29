@@ -5,10 +5,11 @@ export async function middleware(req:NextRequest) {
     const res = NextResponse.next();
     const supabase=await createClient();
     const { data } = await supabase.auth.getSession();
-    const publicRoutes = ["/login", "/register","/forgotPassword","/resetPassword"];
+    const publicRoutes = ["/login", "/register",
+        "/forgotPassword","/resetPassword","/auth/callback"];
     const isPublicRoute = publicRoutes.some((route) =>
-        new RegExp(`^${route}$`).test(req.nextUrl.pathname)
-    );    if (!data.session && !isPublicRoute) {
+        new RegExp(`^${route}$`).test(req.nextUrl.pathname))
+    if (!data.session && !isPublicRoute){
         return NextResponse.redirect(new URL("/login", req.url));
     }
     return res;
