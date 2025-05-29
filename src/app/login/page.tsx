@@ -54,14 +54,13 @@ const Page: React.FC = () => {
         setSuccess(false);
 
         try {
-            console.log(`${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`);
+            const redirectUrl = `${window.location.origin}/auth/callback`;
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options:{
-                    redirectTo:`${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`
+                    redirectTo:redirectUrl
                 }
             });
-
             if (error) {
                 throw error;
             }
